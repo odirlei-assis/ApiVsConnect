@@ -23,7 +23,9 @@ public class FileUploadService {
         }
 
         //nomeArquivo.png
-        //nome.Arquivo.png
+        //nome
+        //png
+        //nome.Arquivo.jpg
         String[] nomeArquivoArray = imagem.getOriginalFilename().split("\\.");
         String novoNome = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"));
         String extensaoArquivo = nomeArquivoArray[nomeArquivoArray.length - 1];
