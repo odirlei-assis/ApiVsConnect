@@ -80,9 +80,10 @@ public class UsuarioController {
         }
 
         novoUsuario.setUrl_img(urlImagem);
-        //Criptografa a senha
-        String senhaCriptografada = new BCryptPasswordEncoder().encode(usuarioDto.senha());
-        novoUsuario.setSenha(senhaCriptografada);
+
+        //Criptografa senha
+        String senhaCript = new BCryptPasswordEncoder().encode(usuarioDto.senha());
+        novoUsuario.setSenha(senhaCript);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(novoUsuario));
     }
