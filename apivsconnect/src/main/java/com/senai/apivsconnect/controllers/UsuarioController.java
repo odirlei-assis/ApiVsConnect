@@ -1,5 +1,6 @@
 package com.senai.apivsconnect.controllers;
 
+import com.senai.apivsconnect.dtos.ImagemDto;
 import com.senai.apivsconnect.dtos.UsuarioDto;
 import com.senai.apivsconnect.models.UsuarioModel;
 import com.senai.apivsconnect.repositories.UsuarioRepository;
@@ -138,6 +139,30 @@ public class UsuarioController {
 
         return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuarioBd));
     }
+
+    @PutMapping(value = "/editarImagem/{idUsuario}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Object> editarImagemUsuario(@PathVariable(value = "idUsuario") UUID id, @ModelAttribute @Valid ImagemDto imagemDto){
+        Optional<UsuarioModel> usuarioBuscado = usuarioRepository.findById(id);
+
+        if (usuarioBuscado.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
+        }
+        UsuarioModel usuarioBd = usuarioBuscado.get();
+        BeanUtils.copyProperties(usuarioBuscado, usuarioBd);
+        String urlImagem;
+
+        try{
+            urlImagem = fileUploadService.fazerUpload(imagemDto.imagem());
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        usuarioBd.setUrl_img(urlImagem);
+
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuarioBd));
+
+    }
+
 
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Object> deletarUsuario(@PathVariable(value = "idUsuario") UUID id){
